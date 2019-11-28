@@ -69,6 +69,9 @@ var MessengerClient = (function () {
             });
         });
     };
+    MessengerClient.prototype.getUserInfo = function (userId) {
+        return this.client.getUserInfo(userId);
+    };
     MessengerClient.prototype.parse = function (message) {
         commander_1.default.parse(string_argv_1.default(message, 'node', 'test'));
     };
