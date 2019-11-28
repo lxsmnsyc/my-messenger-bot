@@ -38,6 +38,9 @@ export default (client: MessengerClient) => {
       }
     });
 
+  /**
+   * API integration for numbers API
+   */
   client.addCommand('/numbers [number]')
     .option('-r, --random', 'uses a random number as a basis')
     .option('-t, --trivia', 'uses a trivia')
@@ -60,6 +63,9 @@ export default (client: MessengerClient) => {
       }
     });
 
+  /**
+   *
+   */
   client.addCommand('/roll [min] [max]')
     .action((min: number = 100, max: number) => {
       if (client.current) {
@@ -77,6 +83,38 @@ export default (client: MessengerClient) => {
       if (client.current) {
         const flip = Math.random() < 0.5 ? 'Tails' : 'Heads';
         client.sendMessage(client.current.threadId, `You flipped ${flip}.`);
+      }
+    });
+
+  client.addCommand('/wiki <query>')
+    .action((query: string) => {
+      if (client.current) {
+        const thread = client.current.threadId;
+
+        axios.get(`https://en.wikipedia.org/w/api.php?action=opensearch&search=${query}`).then(({ data }) => {
+          let result = `Search results for '${data[0]}':`;
+
+          const dataMax = Math.min(data[1].length, 5);
+          const articles = data[1].slice(0, dataMax);
+          const summary = data[2].slice(0, dataMax);
+          // const links = data[3].slice(0, 5);
+
+          console.log(data);
+
+          for (let i = 0; i < dataMax; i++) {
+            result = `${result}
+
+${i + 1}. ${articles[i]}
+- ${summary[i]}
+`
+          };
+
+          result = `${result}
+          
+(I am a bot 🤖, beep boop)`
+
+          client.sendMessage(thread, result);
+        });
       }
     });
 }
