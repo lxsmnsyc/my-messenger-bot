@@ -139,7 +139,7 @@ exports.default = (function (client) {
                     var mentions = [
                         { offset: 6, id: id_1, length: length_1 },
                     ];
-                    client.sendMessage(thread_7, "Hello " + user.name, {
+                    client.sendMessage(thread_7, "Hello @" + user.name, {
                         mentions: mentions,
                     });
                 });
