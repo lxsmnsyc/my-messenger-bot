@@ -27,15 +27,16 @@ exports.default = (function (client) {
     client.addCommand('/roll [min] [max]')
         .description('Rolls a number.')
         .action(function (min, max) {
-        if (min === void 0) { min = 100; }
+        if (min === void 0) { min = '100'; }
         if (client.current) {
             var thread = client.current.threadId;
-            if (max) {
-                client.sendMessage(thread, "You rolled " + ((Math.random() * (max - min)) | 0));
-            }
-            else {
-                client.sendMessage(thread, "You rolled " + ((Math.random() * min) | 0));
-            }
+            var parsedMin = Number.parseInt(min);
+            var parsedMax = Number.parseInt(max);
+            var result = (parsedMax
+                ? (parsedMin + (Math.random() * (parsedMax - parsedMin)))
+                : Math.random() * parsedMin) | 0;
+            console.log("Random: " + result);
+            client.sendMessage(thread, "You rolled " + result + ".");
         }
     });
     client.addCommand('/toss')
@@ -90,9 +91,39 @@ exports.default = (function (client) {
         .action(function () {
         if (client.current) {
             var thread_4 = client.current.threadId;
-            axios_1.default.get('https://insult.mattbas.org/api/insult').then(function (_a) {
+            var source = Math.random() < 0.5
+                ? 'https://evilinsult.com/generate_insult.php?lang=en'
+                : 'https://insult.mattbas.org/api/insult';
+            axios_1.default.get(source).then(function (_a) {
                 var data = _a.data;
                 client.sendMessage(thread_4, data);
+            });
+        }
+    });
+    client.addCommand('/bored')
+        .option('-t, --type <category>', 'category for activity')
+        .option('-p, --participants <value>', 'Number of participants')
+        .action(function (cmdObj) {
+        if (client.current) {
+            var thread_5 = client.current.threadId;
+            axios_1.default.get('http://www.boredapi.com/api/activity/', {
+                data: {
+                    type: cmdObj.type,
+                    participants: cmdObj.participants,
+                }
+            }).then(function (_a) {
+                var data = _a.data;
+                client.sendMessage(thread_5, data.activity);
+            });
+        }
+    });
+    client.addCommand('/quotes:prog')
+        .action(function () {
+        if (client.current) {
+            var thread_6 = client.current.threadId;
+            axios_1.default.get('https://programming-quotes-api.herokuapp.com/quotes/random').then(function (_a) {
+                var data = _a.data;
+                client.sendMessage(thread_6, "'" + data.en + "'\n- " + data.author);
             });
         }
     });
