@@ -18,22 +18,28 @@ To add your commands, go to `/src/commands` and follow the pattern. Commands use
 ### Installing
 
 Yarn
+
 ```bash
 yarn
 ``
 
 NPM
+
 ```bash
 npm install
 ```
 
 ### Building and running source
-```
+
+Yarn
+
+```bash
 yarn build && yarn start
 ```
 
 npm
-```
+
+```bash
 npm run build && npm run start
 ```
 
