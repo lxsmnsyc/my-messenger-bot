@@ -128,4 +128,15 @@ No results found :(`;
         });
       }
     });
+
+  client.addCommand('/insult')
+    .action(() => {
+      if (client.current) {
+        const thread = client.current.threadId;
+
+        axios.get('https://insult.mattbas.org/api/insult').then(({ data }) => {
+          client.sendMessage(thread, data);
+        });
+      }
+    });
 }
