@@ -25,11 +25,13 @@
  * @author Alexis Munsayac <alexis.munsayac@gmail.com>
  * @copyright Alexis Munsayac 2019
  */
-import { ClientOptions, Client, Message, MessageOptions } from 'libfb';
+import { ClientOptions, Client, Message, MessageOptions, Mention } from 'libfb';
 import commander from 'commander';
 import stringArgv from 'string-argv';
 
-commander.exitOverride(console.error);
+commander.exitOverride((err) => {
+  throw err;
+});
 
 type Optional<T> = T | null | undefined;
 
@@ -67,7 +69,33 @@ export default class MessengerClient {
   }
 
   public parse(message: string) {
-    commander.parse(stringArgv(message, 'node', 'test'));
+    try {
+      commander.parse(stringArgv(message, 'node', 'test'));
+    } catch (err) {
+      console.error(err);
+      
+      if (this.currentMessage) {
+        const author = this.currentMessage.authorId;
+        const thread = this.currentMessage.threadId;
+        
+        this.getUserInfo(author).then((user) => {
+          const length = user.name.length + 1;
+          const mentions: Mention[] = [
+            { offset: 3, id: author, length },
+          ];
+          
+          const msg = `Hi @${user.name},
+
+There seems to be a problem processing your command '${message}'.
+
+Please try again ;)`
+
+          this.sendMessage(thread, msg, {
+            mentions,
+          });
+        });
+      }
+    }
   }
 
   public addCommand(pattern: string) {
