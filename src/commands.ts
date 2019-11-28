@@ -33,21 +33,17 @@ export default (client: MessengerClient) => {
   /**
    * API integration for numbers API
    */
-  client.addCommand('/numbers')
+  client.addCommand('/numbers [number]')
     .description('Outputs trivia for numbers.')
-    .option('-n, --number <value>', 'uses the given number as a basis')
-    .option('-r, --random', 'uses a random number as a basis')
-    .option('-t, --trivia', 'uses a trivia')
-    .action((cmdObj) => {
+    .action((number: number) => {
       let request = 'http://numbersapi.com'
-      if (cmdObj.random) {
+      if(number) {
+        request = `${request}/${number}`;
+      } else {
         request = `${request}/random`;
-      } else if(cmdObj.number) {
-        request = `${request}/${cmdObj.number}`;
       }
-      if (cmdObj.trivia) {
-        request = `${request}/trivia`;
-      }
+      
+      request = `${request}/trivia`;
 
       if (client.current) {
         const thread = client.current.threadId;
