@@ -127,4 +127,22 @@ exports.default = (function (client) {
             });
         }
     });
+    client.addCommand('/hello')
+        .action(function () {
+        if (client.current) {
+            var mentions = client.current.mentions;
+            var thread_7 = client.current.threadId;
+            if (mentions) {
+                var id_1 = mentions[0].id;
+                client.getUserInfo(id_1).then(function (user) {
+                    var mentions = [
+                        { offset: 7, id: id_1, length: user.name.length },
+                    ];
+                    client.sendMessage(thread_7, "Hello @" + user.name, {
+                        mentions: mentions,
+                    });
+                });
+            }
+        }
+    });
 });
