@@ -21,7 +21,7 @@ Yarn
 
 ```bash
 yarn
-``
+```
 
 NPM
 
