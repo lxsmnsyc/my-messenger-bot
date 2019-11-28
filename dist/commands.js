@@ -86,4 +86,14 @@ exports.default = (function (client) {
             });
         }
     });
+    client.addCommand('/insult')
+        .action(function () {
+        if (client.current) {
+            var thread_4 = client.current.threadId;
+            axios_1.default.get('https://insult.mattbas.org/api/insult').then(function (_a) {
+                var data = _a.data;
+                client.sendMessage(thread_4, data);
+            });
+        }
+    });
 });
