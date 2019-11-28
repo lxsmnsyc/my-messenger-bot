@@ -27,29 +27,23 @@
  */
 import axios from 'axios';
 import MessengerClient from './utils/client';
+import commander from 'commander';
 
 export default (client: MessengerClient) => {
-  client.addCommand('/greet <greet>')
-    .description('greet with the given message')
-    .action((greeting: string) => {
-      console.log(client.current);
-      if (client.current) {
-        client.sendMessage(client.current.threadId, `Alexis greets: ${greeting}`);
-      }
-    });
-
   /**
    * API integration for numbers API
    */
-  client.addCommand('/numbers [number]')
+  client.addCommand('/numbers')
+    .description('Outputs trivia for numbers.')
+    .option('-n, --number <value>', 'uses the given number as a basis')
     .option('-r, --random', 'uses a random number as a basis')
     .option('-t, --trivia', 'uses a trivia')
-    .action((number, cmdObj) => {
+    .action((cmdObj) => {
       let request = 'http://numbersapi.com'
       if (cmdObj.random) {
         request = `${request}/random`;
-      } else {
-        request = `${request}/${number}`;
+      } else if(cmdObj.number) {
+        request = `${request}/${cmdObj.number}`;
       }
       if (cmdObj.trivia) {
         request = `${request}/trivia`;
@@ -67,6 +61,7 @@ export default (client: MessengerClient) => {
    *
    */
   client.addCommand('/roll [min] [max]')
+    .description('Rolls a number.')
     .action((min: number = 100, max: number) => {
       if (client.current) {
         const thread = client.current.threadId;
@@ -79,6 +74,7 @@ export default (client: MessengerClient) => {
     });
 
   client.addCommand('/toss')
+    .description('Flip a coin.')
     .action(() => {
       if (client.current) {
         const flip = Math.random() < 0.5 ? 'Tails' : 'Heads';
@@ -87,6 +83,7 @@ export default (client: MessengerClient) => {
     });
 
   client.addCommand('/wiki <query>')
+    .description('Perform a wikipedia search.')
     .action((query: string) => {
       if (client.current) {
         const thread = client.current.threadId;
@@ -95,25 +92,39 @@ export default (client: MessengerClient) => {
           let result = `Search results for '${data[0]}':`;
 
           const dataMax = Math.min(data[1].length, 5);
-          const articles = data[1].slice(0, dataMax);
-          const summary = data[2].slice(0, dataMax);
-          // const links = data[3].slice(0, 5);
 
-          console.log(data);
-
-          for (let i = 0; i < dataMax; i++) {
-            result = `${result}
+          if (dataMax > 1) {
+            const articles = data[1].slice(0, dataMax);
+            const summary = data[2].slice(0, dataMax);
+            // const links = data[3].slice(0, 5);
+  
+            console.log(data);
+  
+            for (let i = 0; i < dataMax; i++) {
+              result = `${result}
 
 ${i + 1}. ${articles[i]}
-- ${summary[i]}
-`
-          };
-
-          result = `${result}
-          
-(I am a bot 🤖, beep boop)`
+- ${summary[i]}`
+            };
+          } else {
+            result = `${result}
+            
+No results found :(`;
+          }
 
           client.sendMessage(thread, result);
+        });
+      }
+    });
+
+  client.addCommand('/alexis-help')
+    .action(() => {
+      if (client.current) {
+        const thread = client.current.threadId;
+        commander.outputHelp((str: string) => {
+          client.sendMessage(thread, str);
+
+          return str;
         });
       }
     });
