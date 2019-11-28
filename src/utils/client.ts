@@ -26,8 +26,10 @@
  * @copyright Alexis Munsayac 2019
  */
 import { ClientOptions, Client, Message, MessageOptions } from 'libfb';
-import commander, { Command } from 'commander';
+import commander from 'commander';
 import stringArgv from 'string-argv';
+
+commander.exitOverride(console.error);
 
 type Optional<T> = T | null | undefined;
 
@@ -61,7 +63,7 @@ export default class MessengerClient {
   }
 
   public parse(message: string) {
-    commander.parse(stringArgv(message, 'node', 'test.js'));
+    commander.parse(stringArgv(message, 'node', 'test'));
   }
 
   public addCommand(pattern: string) {
@@ -74,7 +76,10 @@ export default class MessengerClient {
 
   public async sendMessage(threadId: string, message: string, options?: MessageOptions) {
     await this.client.sendTypingState(threadId, true);
-    await this.client.sendMessage(threadId, message, options);
+    const parsed = `${message}
+          
+(I am a bot 🤖, beep boop)`;
+    await this.client.sendMessage(threadId, parsed, options);
     await this.client.sendTypingState(threadId, false);
   }
 }
