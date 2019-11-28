@@ -36,9 +36,20 @@ import Client from './utils/client';
 
 console.log(process.env);
 
-const client = new Client(process.env.FB_USER || '', process.env.FB_PASS || '', THREADS);
+const init = () => {
+  try {
+    const client = new Client(process.env.FB_USER || '', process.env.FB_PASS || '', THREADS);
 
-console.log("Watching for: ", THREADS);
-commands(client);
+    console.log("Watching for: ", THREADS);
+    commands(client);
 
-client.start();
+    client.start();
+  } catch (err) {
+    console.log('ERROR');
+    console.log(err);
+    
+    init();
+  }
+};
+
+init();
