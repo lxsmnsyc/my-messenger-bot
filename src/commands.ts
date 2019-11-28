@@ -194,7 +194,7 @@ No results found :(`;
             const mentions: Mention[] = [
               { offset: 6, id: id, length },
             ];
-            client.sendMessage(thread, `Hello ${user.name}`, {
+            client.sendMessage(thread, `Hello @${user.name}`, {
               mentions,
             });
           });
