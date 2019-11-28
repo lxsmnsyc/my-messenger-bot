@@ -189,11 +189,12 @@ No results found :(`;
 
         if (mentions) {
           const id = mentions[0].id;
+          const length = mentions[0].length
           client.getUserInfo(id).then((user) => {
             const mentions: Mention[] = [
-              { offset: 7, id: id, length: user.name.length },
+              { offset: 6, id: id, length },
             ];
-            client.sendMessage(thread, `Hello @${user.name}`, {
+            client.sendMessage(thread, `Hello ${user.name}`, {
               mentions,
             });
           });
