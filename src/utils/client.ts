@@ -62,6 +62,10 @@ export default class MessengerClient {
     });
   }
 
+  public getUserInfo(userId: string) {
+    return this.client.getUserInfo(userId);
+  }
+
   public parse(message: string) {
     commander.parse(stringArgv(message, 'node', 'test'));
   }
