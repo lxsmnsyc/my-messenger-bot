@@ -117,14 +117,18 @@ No results found :(`;
       }
     });
 
-  client.addCommand('/alexis-help')
+  client.addCommand('/dadjoke')
     .action(() => {
       if (client.current) {
         const thread = client.current.threadId;
-        commander.outputHelp((str: string) => {
-          client.sendMessage(thread, str);
 
-          return str;
+        axios.get('https://icanhazdadjoke.com/', {
+          headers: {
+            'Accept': 'text/plain',
+            'User-Agent': 'My Messenger Bot (https://github.com/LXSMNSYC/my-messenger-bot)'
+          }
+        }).then(({ data }) => {
+          client.sendMessage(thread, data);
         });
       }
     });
