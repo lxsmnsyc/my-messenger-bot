@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
-var commander_1 = __importDefault(require("commander"));
 exports.default = (function (client) {
     client.addCommand('/numbers')
         .description('Outputs trivia for numbers.')
@@ -61,24 +60,34 @@ exports.default = (function (client) {
                 var data = _a.data;
                 var result = "Search results for '" + data[0] + "':";
                 var dataMax = Math.min(data[1].length, 5);
-                var articles = data[1].slice(0, dataMax);
-                var summary = data[2].slice(0, dataMax);
-                console.log(data);
-                for (var i = 0; i < dataMax; i++) {
-                    result = result + "\n\n" + (i + 1) + ". " + articles[i] + "\n- " + summary[i];
+                if (dataMax > 1) {
+                    var articles = data[1].slice(0, dataMax);
+                    var summary = data[2].slice(0, dataMax);
+                    console.log(data);
+                    for (var i = 0; i < dataMax; i++) {
+                        result = result + "\n\n" + (i + 1) + ". " + articles[i] + "\n- " + summary[i];
+                    }
+                    ;
                 }
-                ;
+                else {
+                    result = result + "\n            \nNo results found :(";
+                }
                 client.sendMessage(thread_2, result);
             });
         }
     });
-    client.addCommand('/alexis-help')
+    client.addCommand('/dadjoke')
         .action(function () {
         if (client.current) {
             var thread_3 = client.current.threadId;
-            commander_1.default.outputHelp(function (str) {
-                client.sendMessage(thread_3, str);
-                return str;
+            axios_1.default.get('https://icanhazdadjoke.com/', {
+                headers: {
+                    'Accept': 'text/plain',
+                    'User-Agent': 'My Messenger Bot (https://github.com/LXSMNSYC/my-messenger-bot)'
+                }
+            }).then(function (_a) {
+                var data = _a.data;
+                client.sendMessage(thread_3, data);
             });
         }
     });
