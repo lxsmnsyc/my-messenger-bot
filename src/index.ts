@@ -25,17 +25,20 @@
  * @author Alexis Munsayac <alexis.munsayac@gmail.com>
  * @copyright Alexis Munsayac 2019
  */
-import Client from './utils/client';
 import dotenv from 'dotenv';
+dotenv.config();
+
 import THREADS from './threads';
 import commands from './commands';
 
-dotenv.config();
+import Client from './utils/client';
+
 
 console.log(process.env);
 
 const client = new Client(process.env.FB_USER || '', process.env.FB_PASS || '', THREADS);
 
+console.log("Watching for: ", THREADS);
 commands(client);
 
 client.start();
