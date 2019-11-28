@@ -5,22 +5,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
 exports.default = (function (client) {
-    client.addCommand('/numbers')
+    client.addCommand('/numbers [number]')
         .description('Outputs trivia for numbers.')
-        .option('-n, --number <value>', 'uses the given number as a basis')
-        .option('-r, --random', 'uses a random number as a basis')
-        .option('-t, --trivia', 'uses a trivia')
-        .action(function (cmdObj) {
+        .action(function (number) {
         var request = 'http://numbersapi.com';
-        if (cmdObj.random) {
+        if (number) {
+            request = request + "/" + number;
+        }
+        else {
             request = request + "/random";
         }
-        else if (cmdObj.number) {
-            request = request + "/" + cmdObj.number;
-        }
-        if (cmdObj.trivia) {
-            request = request + "/trivia";
-        }
+        request = request + "/trivia";
         if (client.current) {
             var thread_1 = client.current.threadId;
             axios_1.default.get(request).then(function (_a) {
