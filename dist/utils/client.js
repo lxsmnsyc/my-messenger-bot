@@ -42,6 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var libfb_1 = require("libfb");
 var commander_1 = __importDefault(require("commander"));
 var string_argv_1 = __importDefault(require("string-argv"));
+commander_1.default.exitOverride(console.error);
 var MessengerClient = (function () {
     function MessengerClient(email, password, threads, options) {
         console.log(email, password);
@@ -69,7 +70,7 @@ var MessengerClient = (function () {
         });
     };
     MessengerClient.prototype.parse = function (message) {
-        commander_1.default.parse(string_argv_1.default(message, 'node', 'test.js'));
+        commander_1.default.parse(string_argv_1.default(message, 'node', 'test'));
     };
     MessengerClient.prototype.addCommand = function (pattern) {
         return commander_1.default.command(pattern);
@@ -83,12 +84,14 @@ var MessengerClient = (function () {
     });
     MessengerClient.prototype.sendMessage = function (threadId, message, options) {
         return __awaiter(this, void 0, void 0, function () {
+            var parsed;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, this.client.sendTypingState(threadId, true)];
                     case 1:
                         _a.sent();
-                        return [4, this.client.sendMessage(threadId, message, options)];
+                        parsed = message + "\n          \n(I am a bot \uD83E\uDD16, beep boop)";
+                        return [4, this.client.sendMessage(threadId, parsed, options)];
                     case 2:
                         _a.sent();
                         return [4, this.client.sendTypingState(threadId, false)];
