@@ -1,0 +1,28 @@
+{
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "commander": "^4.0.1",
+    "dotenv": "^8.2.0",
+    "libfb": "^2.3.5",
+    "string-argv": "^0.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.14",
+    "@typescript-eslint/eslint-plugin": "^2.9.0",
+    "@typescript-eslint/parser": "^2.9.0",
+    "eslint": "^6.7.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "typescript": "^3.7.2"
+  },
+  "scripts": {
+    "start": "node dist",
+    "build": "tsc"
+  },
+  "name": "my-messenger-bot",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "repository": "https://github.com/LXSMNSYC/my-messenger-bot.git",
+  "author": "Alexis Munsayac <alexis@lyon.com.ph>",
+  "private": true
+}
