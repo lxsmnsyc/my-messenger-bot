@@ -134,11 +134,12 @@ exports.default = (function (client) {
             var thread_7 = client.current.threadId;
             if (mentions) {
                 var id_1 = mentions[0].id;
+                var length_1 = mentions[0].length;
                 client.getUserInfo(id_1).then(function (user) {
                     var mentions = [
-                        { offset: 7, id: id_1, length: user.name.length },
+                        { offset: 6, id: id_1, length: length_1 },
                     ];
-                    client.sendMessage(thread_7, "Hello @" + user.name, {
+                    client.sendMessage(thread_7, "Hello " + user.name, {
                         mentions: mentions,
                     });
                 });
