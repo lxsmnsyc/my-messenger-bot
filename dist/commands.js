@@ -55,4 +55,24 @@ exports.default = (function (client) {
             client.sendMessage(client.current.threadId, "You flipped " + flip + ".");
         }
     });
+    client.addCommand('/wiki <query>')
+        .action(function (query) {
+        if (client.current) {
+            var thread_2 = client.current.threadId;
+            axios_1.default.get("https://en.wikipedia.org/w/api.php?action=opensearch&search=" + query).then(function (_a) {
+                var data = _a.data;
+                var result = "Search results for '" + data[0] + "':";
+                var dataMax = Math.min(data[1].length, 5);
+                var articles = data[1].slice(0, dataMax);
+                var summary = data[2].slice(0, dataMax);
+                console.log(data);
+                for (var i = 0; i < dataMax; i++) {
+                    result = result + "\n\n" + (i + 1) + ". " + articles[i] + "\n- " + summary[i] + "\n";
+                }
+                ;
+                result = result + "\n          \n(I am a bot \uD83E\uDD16, beep boop)";
+                client.sendMessage(thread_2, result);
+            });
+        }
+    });
 });
