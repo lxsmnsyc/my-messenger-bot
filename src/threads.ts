@@ -26,5 +26,5 @@
  * @copyright Alexis Munsayac 2019
  */
 export default [
-  '1355449081244322',
+  ...(process.env.FB_THREADS || '').split(','),
 ];
