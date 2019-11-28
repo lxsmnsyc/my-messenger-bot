@@ -28,6 +28,7 @@
 import axios from 'axios';
 import MessengerClient from './utils/client';
 import commander from 'commander';
+import { Mention } from 'libfb';
 
 export default (client: MessengerClient) => {
   /**
@@ -178,5 +179,25 @@ No results found :(`;
 - ${data.author}`);
         });
       }
-    })
+    });
+
+  client.addCommand('/hello')
+    .action(() => {
+      if (client.current) {
+        const mentions = client.current.mentions;
+        const thread = client.current.threadId;
+
+        if (mentions) {
+          const id = mentions[0].id;
+          client.getUserInfo(id).then((user) => {
+            const mentions: Mention[] = [
+              { offset: 7, id: id, length: user.name.length },
+            ];
+            client.sendMessage(thread, `Hello @${user.name}`, {
+              mentions,
+            });
+          });
+        }
+      }
+    });
 }
