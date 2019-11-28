@@ -4,25 +4,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
+var commander_1 = __importDefault(require("commander"));
 exports.default = (function (client) {
-    client.addCommand('/greet <greet>')
-        .description('greet with the given message')
-        .action(function (greeting) {
-        console.log(client.current);
-        if (client.current) {
-            client.sendMessage(client.current.threadId, "Alexis greets: " + greeting);
-        }
-    });
-    client.addCommand('/numbers [number]')
+    client.addCommand('/numbers')
+        .description('Outputs trivia for numbers.')
+        .option('-n, --number <value>', 'uses the given number as a basis')
         .option('-r, --random', 'uses a random number as a basis')
         .option('-t, --trivia', 'uses a trivia')
-        .action(function (number, cmdObj) {
+        .action(function (cmdObj) {
         var request = 'http://numbersapi.com';
         if (cmdObj.random) {
             request = request + "/random";
         }
-        else {
-            request = request + "/" + number;
+        else if (cmdObj.number) {
+            request = request + "/" + cmdObj.number;
         }
         if (cmdObj.trivia) {
             request = request + "/trivia";
@@ -36,6 +31,7 @@ exports.default = (function (client) {
         }
     });
     client.addCommand('/roll [min] [max]')
+        .description('Rolls a number.')
         .action(function (min, max) {
         if (min === void 0) { min = 100; }
         if (client.current) {
@@ -49,6 +45,7 @@ exports.default = (function (client) {
         }
     });
     client.addCommand('/toss')
+        .description('Flip a coin.')
         .action(function () {
         if (client.current) {
             var flip = Math.random() < 0.5 ? 'Tails' : 'Heads';
@@ -56,6 +53,7 @@ exports.default = (function (client) {
         }
     });
     client.addCommand('/wiki <query>')
+        .description('Perform a wikipedia search.')
         .action(function (query) {
         if (client.current) {
             var thread_2 = client.current.threadId;
@@ -67,11 +65,20 @@ exports.default = (function (client) {
                 var summary = data[2].slice(0, dataMax);
                 console.log(data);
                 for (var i = 0; i < dataMax; i++) {
-                    result = result + "\n\n" + (i + 1) + ". " + articles[i] + "\n- " + summary[i] + "\n";
+                    result = result + "\n\n" + (i + 1) + ". " + articles[i] + "\n- " + summary[i];
                 }
                 ;
-                result = result + "\n          \n(I am a bot \uD83E\uDD16, beep boop)";
                 client.sendMessage(thread_2, result);
+            });
+        }
+    });
+    client.addCommand('/alexis-help')
+        .action(function () {
+        if (client.current) {
+            var thread_3 = client.current.threadId;
+            commander_1.default.outputHelp(function (str) {
+                client.sendMessage(thread_3, str);
+                return str;
             });
         }
     });
