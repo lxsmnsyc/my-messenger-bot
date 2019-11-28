@@ -9,7 +9,17 @@ var threads_1 = __importDefault(require("./threads"));
 var commands_1 = __importDefault(require("./commands"));
 var client_1 = __importDefault(require("./utils/client"));
 console.log(process.env);
-var client = new client_1.default(process.env.FB_USER || '', process.env.FB_PASS || '', threads_1.default);
-console.log("Watching for: ", threads_1.default);
-commands_1.default(client);
-client.start();
+var init = function () {
+    try {
+        var client = new client_1.default(process.env.FB_USER || '', process.env.FB_PASS || '', threads_1.default);
+        console.log("Watching for: ", threads_1.default);
+        commands_1.default(client);
+        client.start();
+    }
+    catch (err) {
+        console.log('ERROR');
+        console.log(err);
+        init();
+    }
+};
+init();
