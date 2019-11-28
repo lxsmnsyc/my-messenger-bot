@@ -42,7 +42,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var libfb_1 = require("libfb");
 var commander_1 = __importDefault(require("commander"));
 var string_argv_1 = __importDefault(require("string-argv"));
-commander_1.default.exitOverride(console.error);
+commander_1.default.exitOverride(function (err) {
+    throw err;
+});
 var MessengerClient = (function () {
     function MessengerClient(email, password, threads, options) {
         console.log(email, password);
@@ -73,7 +75,27 @@ var MessengerClient = (function () {
         return this.client.getUserInfo(userId);
     };
     MessengerClient.prototype.parse = function (message) {
-        commander_1.default.parse(string_argv_1.default(message, 'node', 'test'));
+        var _this = this;
+        try {
+            commander_1.default.parse(string_argv_1.default(message, 'node', 'test'));
+        }
+        catch (err) {
+            console.error(err);
+            if (this.currentMessage) {
+                var author_1 = this.currentMessage.authorId;
+                var thread_1 = this.currentMessage.threadId;
+                this.getUserInfo(author_1).then(function (user) {
+                    var length = user.name.length + 1;
+                    var mentions = [
+                        { offset: 3, id: author_1, length: length },
+                    ];
+                    var msg = "Hi @" + user.name + ",\n\nThere seems to be a problem processing your command '" + message + "'.\n\nPlease try again ;)";
+                    _this.sendMessage(thread_1, msg, {
+                        mentions: mentions,
+                    });
+                });
+            }
+        }
     };
     MessengerClient.prototype.addCommand = function (pattern) {
         return commander_1.default.command(pattern);
