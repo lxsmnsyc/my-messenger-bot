@@ -58,14 +58,20 @@ export default (client: MessengerClient) => {
    */
   client.addCommand('/roll [min] [max]')
     .description('Rolls a number.')
-    .action((min: number = 100, max: number) => {
+    .action((min: string = '100', max: string) => {
       if (client.current) {
         const thread = client.current.threadId;
-        if (max) {
-          client.sendMessage(thread, `You rolled ${(Math.random() * (max - min)) | 0}`);
-        } else {
-          client.sendMessage(thread, `You rolled ${(Math.random() * min) | 0}`);
-        }
+
+        const parsedMin = Number.parseInt(min);
+        const parsedMax = Number.parseInt(max);
+
+        const result = (parsedMax
+          ? (parsedMin + (Math.random() * (parsedMax - parsedMin)))
+          : Math.random() * parsedMin
+        ) | 0;
+
+        console.log(`Random: ${result}`);
+        client.sendMessage(thread, `You rolled ${result}.`);
       }
     });
 
@@ -134,9 +140,43 @@ No results found :(`;
       if (client.current) {
         const thread = client.current.threadId;
 
-        axios.get('https://insult.mattbas.org/api/insult').then(({ data }) => {
+        const source = Math.random() < 0.5
+          ? 'https://evilinsult.com/generate_insult.php?lang=en'
+          : 'https://insult.mattbas.org/api/insult';
+
+        axios.get(source).then(({ data }) => {
           client.sendMessage(thread, data);
         });
       }
     });
+
+  client.addCommand('/bored')
+    .option('-t, --type <category>', 'category for activity')
+    .option('-p, --participants <value>', 'Number of participants')
+    .action((cmdObj) => {
+      if (client.current) {
+        const thread = client.current.threadId;
+
+        axios.get('http://www.boredapi.com/api/activity/', {
+          data: {
+            type: cmdObj.type,
+            participants: cmdObj.participants,
+          }
+        }).then(({ data }) => {
+          client.sendMessage(thread, data.activity);
+        });
+      }
+    });
+
+  client.addCommand('/quotes:prog')
+    .action(() => {
+      if (client.current) {
+        const thread = client.current.threadId;
+
+        axios.get('https://programming-quotes-api.herokuapp.com/quotes/random').then(({ data }) => {
+          client.sendMessage(thread, `'${data.en}'
+- ${data.author}`);
+        });
+      }
+    })
 }
