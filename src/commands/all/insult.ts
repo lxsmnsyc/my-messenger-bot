@@ -37,13 +37,33 @@ export default (client: MessengerClient) =>
     .action(async () => {
       if (client.current) {
         const thread = client.current.threadId;
+        const mentions = client.current.mentions;
 
         const source = Math.random() < 0.5
           ? 'https://evilinsult.com/generate_insult.php?lang=en'
           : 'https://insult.mattbas.org/api/insult';
 
         const { data }: InsultData = await Axios.get(source);
-        
-        await client.sendMessage(thread, data);
+
+        if (mentions && mentions.length > 0) {
+          const mention = mentions[0];
+
+          const user = await client.getUserInfo(mention.id);
+
+          let base = data;
+          if (data.endsWith('.')) {
+            base = data.substring(0, data.length - 1);
+          }
+
+          const result = `${base}, @${user.name}`;
+
+          await client.sendMessage(thread, result, {
+            mentions: [
+              { offset: base.length + 3, length: user.name.length + 1, id: mention.id },
+            ],
+          })
+        } else {
+          await client.sendMessage(thread, data);
+        }
       }
     });
