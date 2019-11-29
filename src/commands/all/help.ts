@@ -25,30 +25,30 @@
  * @author Alexis Munsayac <alexis.munsayac@gmail.com>
  * @copyright Alexis Munsayac 2019
  */
-import blessed from './blessed';
-import bored from './bored';
-import dadjoke from './dadjoke';
-import flip from './flip';
-import hello from './hello';
-import help from './help';
-import insult from './insult';
-import numbers from './numbers';
-import quotes from './quotes';
-import raffle from './raffle';
-import roll from './roll';
-import wiki from './wiki';
+import MessengerClient from '../../utils/client';
 
-export default [
-  blessed,
-  bored,
-  dadjoke,
-  flip,
-  hello,
-  help,
-  quotes,
-  insult,
-  numbers,
-  raffle,
-  roll,
-  wiki,
-];
+const help = `
+\`\`\`
+Commands for Alexis (Stupid Bot)
+/blessed [category] = Retrieves a blessed url. Categories: fox, dog, cat
+/bored = Outputs an interesting activity.
+/dadjoke = Outputs a dad joke.
+/flip = Do a coin toss.
+/hello = Greet the bot by mentioning it.
+/help = Output list of commands
+/insult (@user) = Insults a mentioned user.
+/numbers [value] = Outputs a trivia about a number
+/quotes -c [category] = Outputs a random quote from a category. Categories: programming
+/raffle [event] = Raffle event. Events: start = start the raffle, join = join the raffle, end = end the raffle.
+/roll [min] [max] = Outputs a random number.
+/wiki <query> = Outputs a list of Wikipedia summary related to the query.
+\`\`\`
+`;
+
+export default (client: MessengerClient) =>
+  client.addCommand('/help:alexis')
+    .action(() => {
+      if (client.current) {
+        client.sendMessage(client.current.threadId, help);
+      }
+    });

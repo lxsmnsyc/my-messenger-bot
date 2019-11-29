@@ -8,6 +8,7 @@ var bored_1 = __importDefault(require("./bored"));
 var dadjoke_1 = __importDefault(require("./dadjoke"));
 var flip_1 = __importDefault(require("./flip"));
 var hello_1 = __importDefault(require("./hello"));
+var help_1 = __importDefault(require("./help"));
 var insult_1 = __importDefault(require("./insult"));
 var numbers_1 = __importDefault(require("./numbers"));
 var quotes_1 = __importDefault(require("./quotes"));
@@ -20,6 +21,7 @@ exports.default = [
     dadjoke_1.default,
     flip_1.default,
     hello_1.default,
+    help_1.default,
     quotes_1.default,
     insult_1.default,
     numbers_1.default,
