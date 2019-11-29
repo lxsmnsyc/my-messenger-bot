@@ -41,15 +41,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
 exports.default = (function (client) {
-    return client.addCommand('/blessed')
-        .option('-d, --dog')
-        .action(function (cmdObj) { return __awaiter(void 0, void 0, void 0, function () {
-        var authorId, thread, data, user, mentions;
+    return client.addCommand('/blessed <tag>')
+        .action(function (tag) { return __awaiter(void 0, void 0, void 0, function () {
+        var authorId, thread, data, user, mentions, authorId, thread, data, user, mentions, authorId, thread, data, user, mentions;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    if (!client.current) return [3, 4];
-                    if (!cmdObj.dog) return [3, 4];
+                    if (!client.current) return [3, 12];
+                    if (!(tag === 'dog')) return [3, 4];
                     authorId = client.current.authorId;
                     thread = client.current.threadId;
                     return [4, axios_1.default.get('https://random.dog/woof.json')];
@@ -68,7 +67,47 @@ exports.default = (function (client) {
                 case 3:
                     _a.sent();
                     _a.label = 4;
-                case 4: return [2];
+                case 4:
+                    if (!(tag === 'cat')) return [3, 8];
+                    authorId = client.current.authorId;
+                    thread = client.current.threadId;
+                    return [4, axios_1.default.get('https://aws.random.cat/meow')];
+                case 5:
+                    data = (_a.sent()).data;
+                    if (!(data && data.file)) return [3, 8];
+                    return [4, client.getUserInfo(authorId)];
+                case 6:
+                    user = _a.sent();
+                    mentions = [
+                        { offset: 3, length: user.name.length + 1, id: authorId },
+                    ];
+                    return [4, client.sendMessage(thread, "Hi @" + user.name + ", here's your blessed link: " + data.file, {
+                            mentions: mentions,
+                        })];
+                case 7:
+                    _a.sent();
+                    _a.label = 8;
+                case 8:
+                    if (!(tag === 'fox')) return [3, 12];
+                    authorId = client.current.authorId;
+                    thread = client.current.threadId;
+                    return [4, axios_1.default.get('https://randomfox.ca/floof/')];
+                case 9:
+                    data = (_a.sent()).data;
+                    if (!(data && data.image)) return [3, 12];
+                    return [4, client.getUserInfo(authorId)];
+                case 10:
+                    user = _a.sent();
+                    mentions = [
+                        { offset: 3, length: user.name.length + 1, id: authorId },
+                    ];
+                    return [4, client.sendMessage(thread, "Hi @" + user.name + ", here's your blessed link: " + data.image, {
+                            mentions: mentions,
+                        })];
+                case 11:
+                    _a.sent();
+                    _a.label = 12;
+                case 12: return [2];
             }
         });
     }); });
