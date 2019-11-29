@@ -33,6 +33,7 @@ import hello from './hello';
 import insult from './insult';
 import numbers from './numbers';
 import quotes from './quotes';
+import raffle from './raffle';
 import roll from './roll';
 import wiki from './wiki';
 
@@ -45,6 +46,7 @@ export default [
   quotes,
   insult,
   numbers,
+  raffle,
   roll,
   wiki,
 ];
