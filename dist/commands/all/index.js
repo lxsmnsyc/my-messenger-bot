@@ -11,6 +11,7 @@ var hello_1 = __importDefault(require("./hello"));
 var insult_1 = __importDefault(require("./insult"));
 var numbers_1 = __importDefault(require("./numbers"));
 var quotes_1 = __importDefault(require("./quotes"));
+var raffle_1 = __importDefault(require("./raffle"));
 var roll_1 = __importDefault(require("./roll"));
 var wiki_1 = __importDefault(require("./wiki"));
 exports.default = [
@@ -22,6 +23,7 @@ exports.default = [
     quotes_1.default,
     insult_1.default,
     numbers_1.default,
+    raffle_1.default,
     roll_1.default,
     wiki_1.default,
 ];
