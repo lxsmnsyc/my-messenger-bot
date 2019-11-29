@@ -29,26 +29,37 @@ import axios from 'axios';
 import { Mention } from 'libfb';
 import MessengerClient from '../../utils/client';
 
-interface CommandBlock {
-  dog: boolean,
-  cat: boolean,
-}
-
 interface BlessedDogData {
   fileSizeBytes: number,
   url: string,
+}
+
+interface BlessedFoxData {
+  image: string,
+  link: string,
+}
+
+interface BlessedCatData {
+  file: string,
 }
 
 interface BlessedDogResponse {
   data: BlessedDogData,
 }
 
+interface BlessedFoxResponse {
+  data: BlessedFoxData,
+}
+
+interface BlessedCatResponse {
+  data: BlessedCatData
+}
+
 export default (client: MessengerClient) => 
-  client.addCommand('/blessed')
-    .option('-d, --dog')
-    .action(async (cmdObj: CommandBlock) => {
+  client.addCommand('/blessed <tag>')
+    .action(async (tag: string) => {
       if (client.current) {
-        if (cmdObj.dog) {
+        if (tag === 'dog') {
           const authorId = client.current.authorId;
           const thread = client.current.threadId;
 
@@ -61,6 +72,42 @@ export default (client: MessengerClient) =>
               { offset: 3, length: user.name.length + 1, id: authorId },
             ];
             await client.sendMessage(thread, `Hi @${user.name}, here's your blessed link: ${data.url}`, {
+              mentions,
+            });
+          }
+        }
+
+        if (tag === 'cat') {
+          const authorId = client.current.authorId;
+          const thread = client.current.threadId;
+
+          const { data }: BlessedCatResponse = await axios.get('https://aws.random.cat/meow');
+
+          if (data && data.file) {
+            const user = await client.getUserInfo(authorId);
+
+            const mentions: Mention[] = [
+              { offset: 3, length: user.name.length + 1, id: authorId },
+            ];
+            await client.sendMessage(thread, `Hi @${user.name}, here's your blessed link: ${data.file}`, {
+              mentions,
+            });
+          }
+        }
+
+        if (tag === 'fox') {
+          const authorId = client.current.authorId;
+          const thread = client.current.threadId;
+
+          const { data }: BlessedFoxResponse = await axios.get('https://randomfox.ca/floof/');
+
+          if (data && data.image) {
+            const user = await client.getUserInfo(authorId);
+
+            const mentions: Mention[] = [
+              { offset: 3, length: user.name.length + 1, id: authorId },
+            ];
+            await client.sendMessage(thread, `Hi @${user.name}, here's your blessed link: ${data.image}`, {
               mentions,
             });
           }
