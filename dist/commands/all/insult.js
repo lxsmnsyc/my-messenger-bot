@@ -43,23 +43,42 @@ var axios_1 = __importDefault(require("axios"));
 exports.default = (function (client) {
     return client.addCommand('/insult')
         .action(function () { return __awaiter(void 0, void 0, void 0, function () {
-        var thread, source, data;
+        var thread, mentions, source, data, mention, user, base, result;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    if (!client.current) return [3, 3];
+                    if (!client.current) return [3, 6];
                     thread = client.current.threadId;
+                    mentions = client.current.mentions;
                     source = Math.random() < 0.5
                         ? 'https://evilinsult.com/generate_insult.php?lang=en'
                         : 'https://insult.mattbas.org/api/insult';
                     return [4, axios_1.default.get(source)];
                 case 1:
                     data = (_a.sent()).data;
-                    return [4, client.sendMessage(thread, data)];
+                    if (!(mentions && mentions.length > 0)) return [3, 4];
+                    mention = mentions[0];
+                    return [4, client.getUserInfo(mention.id)];
                 case 2:
+                    user = _a.sent();
+                    base = data;
+                    if (data.endsWith('.')) {
+                        base = data.substring(0, data.length - 1);
+                    }
+                    result = base + ", @" + user.name;
+                    return [4, client.sendMessage(thread, result, {
+                            mentions: [
+                                { offset: base.length + 3, length: user.name.length + 1, id: mention.id },
+                            ],
+                        })];
+                case 3:
                     _a.sent();
-                    _a.label = 3;
-                case 3: return [2];
+                    return [3, 6];
+                case 4: return [4, client.sendMessage(thread, data)];
+                case 5:
+                    _a.sent();
+                    _a.label = 6;
+                case 6: return [2];
             }
         });
     }); });
