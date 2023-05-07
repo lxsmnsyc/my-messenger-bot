@@ -1,7 +1,7 @@
 {
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "commander": "^4.0.1",
     "dotenv": "^8.2.0",
     "libfb": "^2.3.5",
